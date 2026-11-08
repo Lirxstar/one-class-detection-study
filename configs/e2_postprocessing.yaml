@@ -1,0 +1,16 @@
+# E2 benign post-processing (PROTOCOL.md Section 7, E2).
+base_conditions: [d_ctrl, d_raw]
+apply_to: [R_test, F_seen_test, F_unseen_test]
+reuse_clean_threshold: true
+refit: false
+transforms:
+  clean: {}
+  jpeg:
+    quality: [95, 75, 50]
+    subsampling: modal_real
+    optimize: false
+    progressive: false
+  gaussian_blur:
+    sigma: [0.5, 1.0]
+    call: "scipy.ndimage.gaussian_filter(x.astype(float64), sigma=(s, s, 0), mode='reflect', truncate=4.0)"
+    to_uint8: "clip(rint(y), 0, 255).astype(uint8)"

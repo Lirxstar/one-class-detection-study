@@ -1,0 +1,4 @@
+Model,Trained on,Evaluation set,SD15,ADM,GLIDE,Midjourney,Mean unseen,BigGAN,VQDM,Wukong
+META-primary,Yes (SD15 train),study partitions (R_test vs test sets),"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",1.000,,,
+META-supplementary,Yes (all train generators),study partitions (R_test vs test sets),"1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]","1.000 [1.000, 1.000]",1.000,,,
+META-supplementary,Yes (all train generators),all validation rows (real n = 3435),1.000 (n = 496),1.000 (n = 498),1.000 (n = 481),1.000 (n = 484),,1.000 (n = 489),1.000 (n = 482),1.000 (n = 496)

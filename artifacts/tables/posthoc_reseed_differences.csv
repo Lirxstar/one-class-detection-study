@@ -1,0 +1,13 @@
+R_train draw,Contrast,Mean unseen AUROC difference,95% CI
+seed 42 (frozen R_train),B1 minus O1,0.208,"[0.175, 0.243]"
+seed 42 (frozen R_train),B1 minus O2,0.212,"[0.180, 0.246]"
+seed 42 (frozen R_train),B1 minus M0,0.207,"[0.169, 0.246]"
+seed 7,B1 minus O1,0.219,"[0.186, 0.251]"
+seed 7,B1 minus O2,0.210,"[0.179, 0.242]"
+seed 7,B1 minus M0,0.225,"[0.187, 0.261]"
+seed 13,B1 minus O1,0.212,"[0.180, 0.245]"
+seed 13,B1 minus O2,0.211,"[0.179, 0.244]"
+seed 13,B1 minus M0,0.211,"[0.173, 0.249]"
+seed 29,B1 minus O1,0.198,"[0.166, 0.230]"
+seed 29,B1 minus O2,0.211,"[0.178, 0.244]"
+seed 29,B1 minus M0,0.200,"[0.161, 0.238]"

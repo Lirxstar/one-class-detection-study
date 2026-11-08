@@ -1,0 +1,23 @@
+# Data conditions (PROTOCOL.md Section 3). All views are 224x224x3 uint8.
+decode: {library: pillow, call: "Image.open(BytesIO(b)).convert('RGB')", exif_transpose: never}
+view_size: 224
+modal_real_subsampling: "4:4:4"       # E0 (v0.6.2): modal value among eligible real images (counts in DATA_CARD.md); Pillow subsampling=0
+conditions:
+  d_raw:
+    jpeg_harmonize: false
+    resize: {short_side: 256, long_side: "floor(256*long/short)", interpolation: bicubic, reducing_gap: null}
+    crop: {size: 224, top: "(H-224)//2", left: "(W-224)//2"}
+  d_jpeg:
+    jpeg_harmonize: {apply_to: synthetic, quality: 96, subsampling: modal_real, at: native_size,
+                     optimize: false, progressive: false, tables: ijg_default}
+    resize: {short_side: 256, long_side: "floor(256*long/short)", interpolation: bicubic, reducing_gap: null}
+    crop: {size: 224, top: "(H-224)//2", left: "(W-224)//2"}
+  d_ctrl:
+    jpeg_harmonize: {apply_to: synthetic, quality: 96, subsampling: modal_real, at: native_size,
+                     optimize: false, progressive: false, tables: ijg_default}
+    resize: none
+    crop: {size: 224, top: "((H-224)//2)//m*m", left: "((W-224)//2)//m*m"}
+    offset_multiple_rule: {"4:2:0": 16, default: 8}
+    offset_multiple: 8                 # E0 (v0.6.2): modal subsampling is 4:4:4
+primary: d_ctrl
+ladder: [d_raw, d_jpeg, d_ctrl]

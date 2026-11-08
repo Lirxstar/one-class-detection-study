@@ -1,0 +1,18 @@
+Dataset-derived files
+
+The files under `artifacts/` and `report/figures/` are derived from the
+Tiny-GenImage dataset (Hugging Face: TheKernel01/Tiny-GenImage, revision
+89c4fe9efd0ebc7ce5c7641ef57d578ccd639c69), which is licensed under the Creative
+Commons Attribution-NonCommercial-ShareAlike 4.0 International License and is
+itself built from GenImage (M. Zhu et al., "GenImage: A Million-Scale Benchmark
+for Detecting AI-Generated Image", NeurIPS 2023).
+
+These derived files (image identities, file names, image hashes, partitions,
+per-image scores and predictions, summary tables and figures) are released
+under the same license, CC BY-NC-SA 4.0:
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+Copyright (c) 2026 Ruixin Li. No image from the dataset is included.
+
+The source code in `src/`, `tests/` and `configs/` is licensed separately under
+the MIT License (see LICENSE).

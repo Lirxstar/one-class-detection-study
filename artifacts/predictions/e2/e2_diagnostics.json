@@ -1,0 +1,8 @@
+{
+ "run_id": "e2-15af0fd8",
+ "git_commit": "7f942b995b995e4ed5eebe73ff4dad25c09a9215",
+ "verified_against_e1": {
+  "d_ctrl": true,
+  "d_raw": true
+ }
+}

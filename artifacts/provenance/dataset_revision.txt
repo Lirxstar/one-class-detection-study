@@ -1,0 +1,7 @@
+repository: TheKernel01/Tiny-GenImage
+revision: 89c4fe9efd0ebc7ce5c7641ef57d578ccd639c69
+source: local cache metadata (data/tiny_genimage/.cache/huggingface/download/*.metadata, line 1 of each file; all 20 agree)
+readme_git_blob: 63c5e3694bcd9a3b44dc242b05649f3ee5df3e69
+readme_git_blob_local: 63c5e3694bcd9a3b44dc242b05649f3ee5df3e69
+card_upstream: yangsangtai/tiny-genimage (Kaggle), per dataset card
+license: cc-by-nc-sa-4.0, per dataset card

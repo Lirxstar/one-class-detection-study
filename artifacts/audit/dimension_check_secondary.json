@@ -1,0 +1,40 @@
+{
+ "backbone": "secondary",
+ "rule": "mean |h_pre| on R_train > 10.0 x median",
+ "per_condition": {
+  "d_ctrl": {
+   "dominant_dims": [],
+   "dominant_share": 0.0,
+   "median_mean_abs": 1.208417648578994,
+   "max_over_median": 1.798313570949759,
+   "top10_dims": [
+    38,
+    415,
+    7,
+    623,
+    414,
+    293,
+    48,
+    599,
+    689,
+    272
+   ],
+   "top10_shares": [
+    0.002461418210648193,
+    0.0023178580424157193,
+    0.0017412870888726458,
+    0.0016957800562366317,
+    0.0016911446832534695,
+    0.0016589435841244302,
+    0.0016538762168334857,
+    0.001639036896505086,
+    0.0016376198059092379,
+    0.001634110174883482
+   ],
+   "uniform_share": 0.0013020833333333333
+  }
+ },
+ "dominant_dims": [],
+ "ablation_triggered": false,
+ "note": "M0-x excludes dominant_dims (from D-ctrl R_train) in all conditions; primary M0 unchanged"
+}

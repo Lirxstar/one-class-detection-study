@@ -1,0 +1,23 @@
+# E3 dataset shortcuts (PROTOCOL.md Section 7, E3).
+E3A: {metadata_baseline: [primary, supplementary], per_generator: true}
+E3B: {ladder: [d_raw, d_jpeg, d_ctrl], same_identities: true}
+E3C:
+  base: d_ctrl_views
+  jpeg: {quality: 75, subsampling: modal_real, optimize: false, progressive: false}
+  png: {library: pillow, compress_level: 6}
+  C0:
+    train: {real: png, seen_fake: png}
+    calibration: {real: png}
+    reuse_d_ctrl_features_if_bitwise_equal: true
+    test_variants:
+      - {name: common, real: png, fake: png}
+  C1:
+    train: {real: jpeg_q75, seen_fake: png}
+    calibration: {real: jpeg_q75}
+    test_variants:
+      - {name: biased,   real: jpeg_q75, fake: png}
+      - {name: matched,  real: jpeg_q75, fake: jpeg_q75}
+      - {name: inverted, real: png,      fake: jpeg_q75}
+  refit_per_encoding_condition: [B1, O1, O2]
+  recalibrate_per_encoding_condition: [B1, O1, O2, M0]
+  freeze_threshold_within_condition: true

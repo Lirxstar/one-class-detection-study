@@ -1,0 +1,124 @@
+# Machine-readable form of PROTOCOL.md (v0.6.2, tag protocol-v1.1). The E0
+# values were resolved from the E0 byte audit only, before any validation score.
+project: tiny_genimage_real_only_audit
+protocol_version: "0.6.6"
+seeds:
+  split: 42
+  cv: 42
+  bootstrap: 2026
+
+data:
+  repository: TheKernel01/Tiny-GenImage
+  revision: 89c4fe9efd0ebc7ce5c7641ef57d578ccd639c69
+  local_dir: data/tiny_genimage
+  loader: pyarrow
+  source_splits: {fit: train, calibration_and_test: validation}
+  real_generator: Real
+  generator_seen: SD15            # v0.6.2: SD14 has 0 rows in this derivative
+  generators_absent: [SD14]
+  generators_unseen: [ADM, GLIDE, Midjourney]
+  generators_dev_only: [VQDM, Wukong, BigGAN]
+  targets:
+    R_train: 2000
+    F_seen_train_max: 2000
+    R_cal: 500
+    R_test: 500
+    fake_test_per_generator: 300
+  dev_targets: {P_cal: 500, P_test: 500, P_fake_per_generator: 300}
+  shortfall_rule: reduce_target_before_validation_scoring_and_log
+  eligibility:
+    real:
+      format: JPEG
+      jpeg_quality_exact_ijg: 96
+      mode: RGB
+      jpeg_components: 3
+      exif_orientation_allowed: [null, 1]
+      chroma_subsampling: "4:4:4"   # v0.6.2: modal value among eligible real
+      min_side: 224
+    synthetic:
+      generators: [SD15, ADM, GLIDE, Midjourney]
+      format: PNG
+      mode: [RGB, RGBA_alpha_255]   # v0.6.2: RGBA only if alpha == 255 at every pixel, asserted per image
+      min_side: 224
+    exif_transpose: never
+  duplicates:
+    exact: rgb_sha1
+    near: {hash: dhash64, resize: [9, 8], interpolation: bilinear, max_hamming: 4}
+    grouping: union_find_all_rows
+    exclude_groups_crossing_split: true
+    exclude_groups_crossing_label: true
+    one_representative_per_group: smallest_row_id
+
+encoder:
+  primary:
+    name: dinov2_vits14
+    registers: false
+    repo_dir: models/dinov2
+    repo_commit: 7764ea0f912e53c92e82eb78a2a1631e92725fc8
+    weights: checkpoints/dinov2_vits14_pretrain.pth
+    weights_sha256: b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9
+    dim: 384
+  secondary:
+    name: dinov2_vitb14
+    registers: false
+    repo_dir: models/dinov2
+    repo_commit: 7764ea0f912e53c92e82eb78a2a1631e92725fc8
+    weights: checkpoints/dinov2_vitb14_pretrain.pth
+    weights_sha256: 0b8b82f85de91b424aded121c7e1dcc2b7bc6d0adeea651bf73a13307fad8c73
+    dim: 768
+    scope: {experiments: [E1], conditions: [d_ctrl], role: secondary}
+  device: cpu
+  dtype: float32
+  batch_size: 32
+  torch_num_threads: 6
+  normalize: {mean: [0.485, 0.456, 0.406], std: [0.229, 0.224, 0.225]}
+  features:
+    pre_ln_cls: "x_prenorm[:, 0, :]"   # M0 only, raw
+    post_ln_cls: x_norm_clstoken       # B1, O1, O2, L2-normalized
+  l2_eps: 1.0e-12
+  determinism_check: {n_images: 64, rule: bitwise_equal}
+  dimension_dominance: {statistic: mean_abs_h_pre_on_R_train, dominant_if_gt_median_times: 10, ablation: M0-x}
+
+methods:
+  B1:
+    type: logistic_regression
+    penalty: l2
+    solver: lbfgs
+    class_weight: null
+    max_iter: 5000
+    C_grid: [0.01, 0.1, 1.0, 10.0, 100.0]
+    selection: {cv: stratified_group_kfold, n_splits: 5, shuffle: true, groups: duplicate_group,
+                metric: mean_fold_auroc, tie_break: smaller_C, data: train_split_only}
+    sensitivity_C: 1.0
+    labels_allowed: [R_train, F_seen_train]
+  O1: {type: knn, k: 5, metric: cosine, exploratory_k: [1, 10], feature: post_ln_cls_l2}
+  O2: {type: mahalanobis, covariance: ledoit_wolf, assume_centered: false, solve: numpy_linalg_solve,
+       feature: post_ln_cls_l2}
+  M0: {type: negative_l1_norm, feature: pre_ln_cls, orientation: fixed_negative, flip: never,
+       exploratory: [neg_l2_norm, neg_l1_over_l2]}
+  metadata_baseline:
+    features: [format_onehot_jpeg_png_other, width, height, aspect_ratio, bytes_per_pixel, jpeg_quality_or_0, is_jpeg]
+    scaler: standard
+    model: same_as_B1_with_cv
+    primary_train: [R_train, F_seen_train]
+    supplementary_train: all_train_rows_all_generators
+    evaluate: e3_final_only
+
+calibration:
+  source: clean_authentic_R_cal_only
+  target_fpr: 0.05
+  quantile_rule: {k: "ceil(0.95*(n+1))", integer_form: "-(-95*(n+1)//100)", threshold: kth_smallest_1_indexed,
+                  flag: score_strictly_greater, ties: not_flagged, k_gt_n: plus_inf}
+  per: [method, data_condition, encoding_condition, backbone]
+
+statistics:
+  n_bootstrap: 2000
+  interval: percentile_95
+  shared_real_test_ids_across_generators: true
+  shared_ids_across_conditions: true
+  paired_contrasts: same_resampled_identities
+
+integrity:
+  validation_scoring_requires_tags: [protocol-v1.1, splits-v1]
+  final_runs_once_from_tag: [e1-final, e2-final, e3-final]
+  dev_only_train_generators: [VQDM, Wukong, BigGAN]

@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "Please cite this software and its accompanying unpublished research manuscript."
+title: "Does Real-Only Modeling Improve Unseen-Generator Detection? A Controlled Study with Frozen DINOv2 Features"
+authors:
+  - family-names: Li
+    given-names: Ruixin
+type: software
+version: 1.0.0
+license: MIT
+repository-code: "https://github.com/Lirxstar/one-class-detection-study"
+date-released: 2026-11-08

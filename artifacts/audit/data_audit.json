@@ -1,0 +1,387 @@
+{
+  "dataset_revision": "89c4fe9efd0ebc7ce5c7641ef57d578ccd639c69",
+  "pillow_version": "13.0.0",
+  "files": [
+    "train-00000-of-00014.parquet",
+    "train-00001-of-00014.parquet",
+    "train-00002-of-00014.parquet",
+    "train-00003-of-00014.parquet",
+    "train-00004-of-00014.parquet",
+    "train-00005-of-00014.parquet",
+    "train-00006-of-00014.parquet",
+    "train-00007-of-00014.parquet",
+    "train-00008-of-00014.parquet",
+    "train-00009-of-00014.parquet",
+    "train-00010-of-00014.parquet",
+    "train-00011-of-00014.parquet",
+    "train-00012-of-00014.parquet",
+    "train-00013-of-00014.parquet",
+    "validation-00000-of-00004.parquet",
+    "validation-00001-of-00004.parquet",
+    "validation-00002-of-00004.parquet",
+    "validation-00003-of-00004.parquet"
+  ],
+  "n_rows": 35000,
+  "class_names": {
+    "label": [
+      "real",
+      "fake"
+    ],
+    "generator": [
+      "Real",
+      "ADM",
+      "BigGAN",
+      "GLIDE",
+      "Midjourney",
+      "SD14",
+      "SD15",
+      "VQDM",
+      "Wukong"
+    ]
+  },
+  "counts_split_generator": {
+    "ADM": {
+      "train": 2000,
+      "validation": 500
+    },
+    "BigGAN": {
+      "train": 2000,
+      "validation": 500
+    },
+    "GLIDE": {
+      "train": 2000,
+      "validation": 500
+    },
+    "Midjourney": {
+      "train": 2000,
+      "validation": 500
+    },
+    "Real": {
+      "train": 14000,
+      "validation": 3500
+    },
+    "SD15": {
+      "train": 2000,
+      "validation": 500
+    },
+    "VQDM": {
+      "train": 2000,
+      "validation": 500
+    },
+    "Wukong": {
+      "train": 2000,
+      "validation": 500
+    }
+  },
+  "format_by_generator": {
+    "ADM": {
+      "PNG": 2500
+    },
+    "BigGAN": {
+      "PNG": 2500
+    },
+    "GLIDE": {
+      "PNG": 2500
+    },
+    "Midjourney": {
+      "PNG": 2500
+    },
+    "Real": {
+      "JPEG": 17500
+    },
+    "SD15": {
+      "PNG": 2500
+    },
+    "VQDM": {
+      "PNG": 2500
+    },
+    "Wukong": {
+      "PNG": 2500
+    }
+  },
+  "mode_by_generator": {
+    "ADM": {
+      "RGBA": 2500
+    },
+    "BigGAN": {
+      "RGB": 2500
+    },
+    "GLIDE": {
+      "RGB": 2500
+    },
+    "Midjourney": {
+      "RGB": 2500
+    },
+    "Real": {
+      "L": 280,
+      "RGB": 17220
+    },
+    "SD15": {
+      "RGB": 2500
+    },
+    "VQDM": {
+      "RGB": 2500
+    },
+    "Wukong": {
+      "RGB": 2500
+    }
+  },
+  "jpeg_quality_top5_by_generator": {
+    "Real": {
+      "96.0": 12299,
+      "75.0": 782,
+      "80.0": 707,
+      "90.0": 436,
+      "92.0": 394
+    }
+  },
+  "jpeg_exact_ijg_share_by_generator": {
+    "Real": 0.9997
+  },
+  "jpeg_subsampling_by_generator": {
+    "Real": {
+      "4:2:0": 3008,
+      "4:2:2": 236,
+      "4:4:4": 13964,
+      "unknown": 292
+    }
+  },
+  "size_top5_by_generator": {
+    "ADM": {
+      "256x256": 2500
+    },
+    "BigGAN": {
+      "128x128": 2500
+    },
+    "GLIDE": {
+      "256x256": 2500
+    },
+    "Midjourney": {
+      "1024x1024": 2499,
+      "512x512": 1
+    },
+    "Real": {
+      "500x375": 4360,
+      "500x333": 1502,
+      "375x500": 1347,
+      "333x500": 520,
+      "500x334": 415
+    },
+    "SD15": {
+      "512x512": 2500
+    },
+    "VQDM": {
+      "256x256": 2500
+    },
+    "Wukong": {
+      "512x512": 2500
+    }
+  },
+  "min_side_by_generator": {
+    "ADM": {
+      "min": 256,
+      "median": 256.0,
+      "max": 256
+    },
+    "BigGAN": {
+      "min": 128,
+      "median": 128.0,
+      "max": 128
+    },
+    "GLIDE": {
+      "min": 256,
+      "median": 256.0,
+      "max": 256
+    },
+    "Midjourney": {
+      "min": 512,
+      "median": 1024.0,
+      "max": 1024
+    },
+    "Real": {
+      "min": 34,
+      "median": 375.0,
+      "max": 4419
+    },
+    "SD15": {
+      "min": 512,
+      "median": 512.0,
+      "max": 512
+    },
+    "VQDM": {
+      "min": 256,
+      "median": 256.0,
+      "max": 256
+    },
+    "Wukong": {
+      "min": 512,
+      "median": 512.0,
+      "max": 512
+    }
+  },
+  "bytes_per_pixel_median_by_generator": {
+    "ADM": 1.822,
+    "BigGAN": 1.8401,
+    "GLIDE": 1.1702,
+    "Midjourney": 1.1829,
+    "Real": 0.6018,
+    "SD15": 1.7506,
+    "VQDM": 1.7088,
+    "Wukong": 1.7747
+  },
+  "nontrivial_exif_orientation_by_generator": {
+    "ADM": 0,
+    "BigGAN": 0,
+    "GLIDE": 0,
+    "Midjourney": 0,
+    "Real": 11,
+    "SD15": 0,
+    "VQDM": 0,
+    "Wukong": 0
+  },
+  "orig_path_examples_by_generator": {
+    "ADM": [
+      "0_adm_123.PNG",
+      "100_adm_127.PNG",
+      "100_adm_168.PNG"
+    ],
+    "BigGAN": [
+      "000_biggan_00093.png",
+      "001_biggan_00033.png",
+      "002_biggan_00010.png"
+    ],
+    "GLIDE": [
+      "GLIDE_1000_200_00_001_glide_00086.png",
+      "GLIDE_1000_200_00_002_glide_00060.png",
+      "GLIDE_1000_200_00_002_glide_00118.png"
+    ],
+    "Midjourney": [
+      "0_midjourney_161.png",
+      "0_midjourney_199.png",
+      "100_midjourney_32.png"
+    ],
+    "Real": [
+      "n01440764_11602.JPEG",
+      "n01440764_5969.JPEG",
+      "n01440764_2751.JPEG"
+    ],
+    "SD15": [
+      "001_sdv5_00094.png",
+      "001_sdv5_00188.png",
+      "002_sdv5_00037.png"
+    ],
+    "VQDM": [
+      "VQDM_1000_200_00_001_vqdm_00085.png",
+      "VQDM_1000_200_00_002_vqdm_00088.png",
+      "VQDM_1000_200_00_002_vqdm_00166.png"
+    ],
+    "Wukong": [
+      "0_wukong_image104.png",
+      "0_wukong_image123.png",
+      "100_wukong_image108.png"
+    ]
+  },
+  "info_keys_top3_by_generator": {
+    "ADM": {
+      "Software;dpi": 2500
+    },
+    "BigGAN": {
+      "": 2500
+    },
+    "GLIDE": {
+      "": 2500
+    },
+    "Midjourney": {
+      "": 2500
+    },
+    "Real": {
+      "dpi;jfif;jfif_density;jfif_unit;jfif_version": 10209,
+      "dpi;icc_profile;jfif;jfif_density;jfif_unit;jfif_version": 3366,
+      "dpi;icc_profile;jfif;jfif_density;jfif_unit;jfif_version;photoshop": 837
+    },
+    "SD15": {
+      "": 2500
+    },
+    "VQDM": {
+      "": 2500
+    },
+    "Wukong": {
+      "": 2500
+    }
+  },
+  "exact_duplicates_rgb": {
+    "groups_with_duplicates": 2,
+    "rows_in_such_groups": 4,
+    "groups_crossing_split": 1,
+    "groups_crossing_label": 0
+  },
+  "identical_dhash": {
+    "groups_with_duplicates": 11,
+    "rows_in_such_groups": 29,
+    "groups_crossing_split": 5,
+    "groups_crossing_label": 3
+  },
+  "eligible_v06_vs_targets": {
+    "train_real (R_train needs 2000)": 9314,
+    "train_SD14 (F_seen_train up to 2000)": 0,
+    "validation_real (R_cal + R_test need 1000)": 2911,
+    "validation_SD14 (needs 300)": 0,
+    "validation_ADM (needs 300)": 500,
+    "validation_GLIDE (needs 300)": 500,
+    "validation_Midjourney (needs 300)": 500
+  },
+  "eligible_strict_vs_targets": {
+    "train_real (R_train needs 2000)": 9144,
+    "train_SD14 (F_seen_train up to 2000)": 0,
+    "validation_real (R_cal + R_test need 1000)": 2862,
+    "validation_SD14 (needs 300)": 0,
+    "validation_ADM (needs 300)": 500,
+    "validation_GLIDE (needs 300)": 500,
+    "validation_Midjourney (needs 300)": 500
+  },
+  "strict_rule_note": "strict adds: real mode RGB with 3 JPEG components and no EXIF rotation; synthetic stored as PNG",
+  "g0_signals": {
+    "labels_consistent_with_generator": true,
+    "real_share_jpeg": 1.0,
+    "real_share_exact_ijg_q96": 0.7027,
+    "real_distinct_sizes": 3703,
+    "synthetic_share_png_by_generator": {
+      "ADM": 1.0,
+      "GLIDE": 1.0,
+      "Midjourney": 1.0
+    },
+    "synthetic_modal_size_vs_expected": {
+      "SD14": {
+        "observed": null,
+        "expected_original_genimage": "512x512"
+      },
+      "ADM": {
+        "observed": "256x256",
+        "expected_original_genimage": "256x256"
+      },
+      "GLIDE": {
+        "observed": "256x256",
+        "expected_original_genimage": "256x256"
+      },
+      "Midjourney": {
+        "observed": "1024x1024",
+        "expected_original_genimage": "1024x1024"
+      }
+    },
+    "uniform_resize_suspect": false,
+    "uniform_reencode_suspect": false,
+    "decode_failures": 0,
+    "cross_split_exact_duplicate_rows": 2,
+    "generators_seen_in_this_audit": [
+      "ADM",
+      "BigGAN",
+      "GLIDE",
+      "Midjourney",
+      "Real",
+      "SD15",
+      "VQDM",
+      "Wukong"
+    ],
+    "partial_audit": false
+  }
+}

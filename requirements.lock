@@ -1,0 +1,48 @@
+# Environment lock for conda env 'ocsa' (frozen after E0 and the DINOv2 smoke test, 2026-11-08).
+# python 3.11.18, machine arm64, macOS-14.8.9-arm64-arm-64bit
+# Pillow libjpeg-turbo 3.2.0, zlib 1.3.1.zlib-ng; torch threads used: 6; MPS/GPU not used
+# Recreate: conda create -n ocsa python=3.11 && pip install -r requirements.lock
+anyio==4.16.0
+click==8.5.1
+cloudpickle==3.1.2
+contourpy==1.3.3
+cycler==0.12.1
+filelock==4.2.9
+fonttools==4.68.0
+fsspec==2026.9.0
+h11==0.16.0
+hf-xet==1.8.0
+httpcore2==2.16.0
+httpx2==2.16.0
+huggingface_hub==2.4.0
+idna==3.20
+iniconfig==2.3.1
+Jinja2==3.1.6
+joblib==1.6.0
+kiwisolver==1.5.1
+MarkupSafe==3.0.4
+matplotlib==3.11.2
+mpmath==1.3.0
+narwhals==2.28.0
+networkx==3.6.1
+numpy==2.4.6
+packaging==26.3
+pandas==3.1.1
+pillow==13.0.0
+pluggy==1.7.0
+pyarrow==26.0.1
+Pygments==2.21.0
+pyparsing==3.3.3
+pytest==9.2.0
+python-dateutil==4.0.0
+PyYAML==6.0.3
+scikit-learn==1.9.1
+scipy==1.17.1
+sympy==1.14.0
+threadpoolctl==3.8.0
+torch==2.15.0
+torchvision==0.29.2
+tqdm==4.70.1
+truststore==0.10.5
+typing_extensions==4.16.0
+tzdata==2026.6
