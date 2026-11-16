@@ -1,0 +1,10 @@
+Cell,Quantity,Mean of 5 seeds,SD,Min,Max,Seeds with interval excluding 0,Seeds with negative point estimate,Statement
+ViT-S/14 native (primary),B1-eq AUROC FLUX,0.736,0.026,0.694,0.763,,,
+ViT-S/14 native (primary),"O1 minus B1-eq, AUROC FLUX",-0.121,0.026,-0.147,-0.078,5 of 5,5 of 5,B1-eq above
+ViT-S/14 native (primary),"O2 minus B1-eq, AUROC FLUX",-0.081,0.026,-0.108,-0.039,4 of 5,5 of 5,B1-eq above
+ViT-S/14 resize,B1-eq AUROC FLUX,0.867,0.014,0.851,0.881,,,
+ViT-S/14 resize,"O1 minus B1-eq, AUROC FLUX",-0.274,0.014,-0.288,-0.258,5 of 5,5 of 5,B1-eq above
+ViT-S/14 resize,"O2 minus B1-eq, AUROC FLUX",-0.225,0.014,-0.238,-0.208,5 of 5,5 of 5,B1-eq above
+ViT-B/14 native,B1-eq AUROC FLUX,0.719,0.022,0.681,0.734,,,
+ViT-B/14 native,"O1 minus B1-eq, AUROC FLUX",-0.080,0.022,-0.094,-0.042,4 of 5,5 of 5,B1-eq above
+ViT-B/14 native,"O2 minus B1-eq, AUROC FLUX",-0.037,0.022,-0.051,+0.001,1 of 5,4 of 5,no detectable difference

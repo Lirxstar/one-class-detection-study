@@ -2,7 +2,7 @@
 
 ## A Controlled Study with Frozen DINOv2 Features
 
-> **Key finding:** On the evaluated Tiny-GenImage derivative, a supervised probe trained with images from one known generator outperforms three real-only scoring methods on three held-out generators. Real-only methods produce more stable false-positive rates under JPEG recompression and blur, but detect very few synthetic images at the chosen operating point. The dataset itself also contains a severe stored-format shortcut. A supplementary test on content-matched images stored losslessly in both classes (B-Free extended Synthbuster, Section 5) gives the same ordering for the distance-based scores, while the magnitude score M0 reverses.
+> **Key finding:** On the evaluated Tiny-GenImage derivative, a supervised probe trained with images from one known generator outperforms three real-only scoring methods on three held-out generators. Real-only methods produce more stable false-positive rates under JPEG recompression and blur, but detect very few synthetic images at the chosen operating point. The dataset itself also contains a severe stored-format shortcut. A supplementary test on content-matched images stored losslessly in both classes (B-Free extended Synthbuster, Section 5) gives the same ordering for the distance-based scores, while the magnitude score M0 reverses. Fitting B1 there on only as many images as the real-only scores use leaves this ordering unchanged in the primary view (Section 6).
 
 ## Research questions
 
@@ -152,6 +152,28 @@ O1 and O2 score about as well as on Tiny-GenImage (0.621 and 0.617 in D-ctrl), s
 
 Results: [all ids](artifacts/tables/supp_bfree/final_main_all.csv) · [sRGB ids](artifacts/tables/supp_bfree/final_main_srgb.csv) · [real-only minus B1](artifacts/tables/supp_bfree/final_contrasts_all.csv) · [seen minus unseen](artifacts/tables/supp_bfree/final_seen_unseen_all.csv) · [cells](artifacts/tables/supp_bfree/final_cells_all.csv) · [comparison with Tiny-GenImage](artifacts/tables/supp_bfree/final_core_comparison.csv) · [diagnostics](artifacts/tables/supp_bfree/final_diagnostics.csv).
 
+## 6. Equal training size for B1 (S-BF, post hoc)
+
+In S-BF, B1 is fitted on 1,200 images (the real and the SD3.5 image of each of the 600 train ids), O1 and O2 on 600 (the real images only). After the S-BF results, B1 was refitted on the real and SD3.5 images of 300 train ids, so that it uses 600 training images like O1 and O2. The 300 ids were drawn five times (seeds 101 to 105, stratified like the splits). Calibration and test sets are those of S-BF; O1, O2 and the original B1 (B1-full) are taken from the S-BF records without refitting. All intervals use the S-BF bootstrap draws, so every difference is paired.
+
+![Figure F7: FLUX AUROC with B1 fitted on 600 images](report/figures/supp_bfree_eq/eq_auroc_flux.svg)
+
+*Figure F7. FLUX AUROC of B1-full (filled circle), B1 fitted on 600 images for each seed (open circles), O1 and O2, in the three S-BF cells. Error bars: 95% bootstrap intervals.*
+
+| B1 training set (ViT-S/14 native) | B1 AUROC FLUX | O1 minus B1 | O2 minus B1 |
+| --------------------------------- | -------------:| -----------:| -----------:|
+| 1,200 images (B1-full)            | 0.734 [0.688, 0.779] | −0.118 [−0.171, −0.063] | −0.079 [−0.132, −0.024] |
+| 600 images, seed 101              | 0.753 | −0.137 | −0.098 |
+| 600 images, seed 102              | 0.763 | −0.147 | −0.108 |
+| 600 images, seed 103              | 0.736 | −0.120 | −0.080 |
+| 600 images, seed 104              | 0.736 | −0.121 | −0.081 |
+| 600 images, seed 105              | 0.694 | −0.078 | −0.039 [−0.090, +0.012] |
+| 600 images, mean of 5 seeds       | 0.736 [0.696, 0.778] | −0.121 [−0.167, −0.072] | −0.081 [−0.129, −0.031] |
+
+With half the training ids, B1's mean FLUX AUROC differs from B1-full by +0.002 [−0.008, +0.014], and B1 stays above O1 and O2. Per seed, the interval of the difference excludes 0 for all five seeds against O1 and for four against O2. The drawn ids move B1 between 0.694 and 0.763 (SD 0.026); seed 105 is the lowest in every cell. With the resized view, B1 on 600 images (mean 0.867) stays above O1 (0.593) and O2 (0.642) for every seed. With ViT-B/14, halving the training set lowers B1 by 0.016 [0.004, 0.027], and the O2 difference, the smallest in S-BF (−0.052 [−0.102, −0.001]), is no longer resolved (−0.037 [−0.084, +0.011]). Equal size refers to the number of training images: B1 still sees 300 real photographs, O1 and O2 600.
+
+Results: [AUROC by seed](artifacts/tables/supp_bfree_eq/final_auroc_by_seed.csv) · [paired differences](artifacts/tables/supp_bfree_eq/final_contrasts.csv) · [spread over seeds](artifacts/tables/supp_bfree_eq/final_seed_summary.csv) · [operating points](artifacts/tables/supp_bfree_eq/final_operating_points.csv) · [diagnostics](artifacts/tables/supp_bfree_eq/final_diagnostics.csv).
+
 ## Supplementary visual evidence
 
 <details>
@@ -188,16 +210,16 @@ The thin lines show within-image changes for the same held-out real image; the b
 
 ## Code and reproduction
 
-This repository contains the experiment code, configurations, frozen splits, saved predictions and figures of the study and of the S-BF supplement.
+This repository contains the experiment code, configurations, frozen splits, saved predictions and figures of the study, of the S-BF supplement and of its post hoc equal-size analysis (S-BF-EQ).
 
-- [`src/`](src/): dataset auditing, duplicate grouping, deterministic partitioning, frozen DINOv2 feature extraction, B1/O1/O2/M0 scoring, calibration, E1 to E3 experiments, the two post hoc runs, analysis and plots. The S-BF supplement is in `src/supp_bfree_*.py` and reuses these modules unchanged.
-- [`configs/`](configs/): four protocol configurations and pinned model/dataset revisions; `supp_bfree.yaml` for S-BF.
+- [`src/`](src/): dataset auditing, duplicate grouping, deterministic partitioning, frozen DINOv2 feature extraction, B1/O1/O2/M0 scoring, calibration, E1 to E3 experiments, the two post hoc runs, analysis and plots. The S-BF supplement is in `src/supp_bfree_*.py`, S-BF-EQ in `src/supp_bfree_eq_*.py`; both reuse these modules unchanged.
+- [`configs/`](configs/): four protocol configurations and pinned model/dataset revisions; `supp_bfree.yaml` for S-BF, `supp_bfree_eq.yaml` for S-BF-EQ.
 - [`tests/`](tests/): core checks for preprocessing, split integrity, label isolation and calibration.
-- [`artifacts/predictions/`](artifacts/predictions/): compressed final and post hoc prediction records (E1, E2, E3, D-native, reseeding, S-BF), from which every table and figure is regenerated without model inference. Train-split pilot records are not included.
+- [`artifacts/predictions/`](artifacts/predictions/): compressed final and post hoc prediction records (E1, E2, E3, D-native, reseeding, S-BF, S-BF-EQ), from which every table and figure is regenerated without model inference. Train-split pilot records are not included.
 - [`artifacts/tables/`](artifacts/tables/): selected numerical summary CSVs.
-- [`artifacts/manifest.csv`](artifacts/manifest.csv) and [`artifacts/splits.json`](artifacts/splits.json): frozen dataset identities, eligibility information and splits; [`artifacts/supp_bfree/`](artifacts/supp_bfree/): the S-BF file audit, manifest and splits.
-- [`report/figures/`](report/figures/): the SVG figures shown in this README, generated by `src/figures.py` and, for S-BF, `src/supp_bfree_analysis.py` from the saved predictions.
-- [`PROTOCOL.md`](PROTOCOL.md): the study protocol, with the post hoc analyses labeled and the S-BF protocol in Section 7.
+- [`artifacts/manifest.csv`](artifacts/manifest.csv) and [`artifacts/splits.json`](artifacts/splits.json): frozen dataset identities, eligibility information and splits; [`artifacts/supp_bfree/`](artifacts/supp_bfree/): the S-BF file audit, manifest and splits; [`artifacts/supp_bfree_eq/`](artifacts/supp_bfree_eq/): the S-BF-EQ training draws.
+- [`report/figures/`](report/figures/): the SVG figures shown in this README, generated by `src/figures.py` and, for S-BF and S-BF-EQ, `src/supp_bfree_analysis.py` and `src/supp_bfree_eq_analysis.py` from the saved predictions.
+- [`PROTOCOL.md`](PROTOCOL.md): the study protocol, with the post hoc analyses labeled, the S-BF protocol in Section 7 and S-BF-EQ in Section 8.
 
 ### Recompute analysis and figures from stored predictions
 
@@ -209,9 +231,10 @@ python -m pytest -q
 python src/analysis.py
 python src/figures.py
 python src/supp_bfree_analysis.py
+python src/supp_bfree_eq_analysis.py
 ```
 
-These commands regenerate tabular metrics and the figure set from saved predictions. They do not re-run DINOv2 inference or model fitting. Tests that need local view or feature caches, or the B-Free images, skip. On a fresh copy of this repository with the locked environment, `pytest` passes (109 passed, 13 skipped) and the three commands reproduce the committed tables and SVG figures byte for byte. A full raw-data rerun of the main study from this repository has not been performed; the S-BF experiment was rerun from its raw data ([REPRODUCIBILITY.md](REPRODUCIBILITY.md)).
+These commands regenerate tabular metrics and the figure set from saved predictions. They do not re-run DINOv2 inference or model fitting. Tests that need local view or feature caches, or the B-Free images, skip. On a fresh copy of this repository with the locked environment, `pytest` passes (121 passed, 14 skipped) and the four analysis commands reproduce the committed tables and SVG figures byte for byte. A full raw-data rerun of the main study from this repository has not been performed; the S-BF experiment was rerun from its raw data and S-BF-EQ from the S-BF features ([REPRODUCIBILITY.md](REPRODUCIBILITY.md)).
 
 ### Full experiment reproduction
 
@@ -222,15 +245,15 @@ Obtain the pinned [Tiny-GenImage](https://huggingface.co/datasets/TheKernel01/Ti
 - One primary frozen DINOv2 backbone; three held-out generators on Tiny-GenImage and one (FLUX, 200 test pairs) in S-BF.
 - Only global class-token scoring is tested; pixel, patch, reconstruction and fine-tuned methods may behave differently.
 - Bootstrap intervals resample the fixed test identities and hold the fitted models and thresholds fixed, so they omit training-set and dataset-level variation.
-- D-native, the injected-cue decomposition and the `R_train` reseeding were added after the main results and are labeled post hoc. S-BF was also added afterwards, with its protocol fixed before any of its features were computed.
+- D-native, the injected-cue decomposition and the `R_train` reseeding were added after the main results and are labeled post hoc. S-BF was also added afterwards, with its protocol fixed before any of its features were computed. S-BF-EQ was designed after the S-BF results and reuses the S-BF test set; it equalizes the number of training images, not the number of real images.
 - In S-BF the real photographs were downscaled from camera resolution while the synthetic images are native 1024 × 1024 output; aspect ratios differ (3:2 versus 1:1), the content match is caption-level rather than pixel-level, and SD3.5 and FLUX are related latent generators.
 - Dataset storage differences can make synthetic-image detection benchmark results misleading.
 
 ## Data, license, and citation
 
 - **Code** (`src/`, `tests/`, `configs/`) and documentation: [MIT](LICENSE).
-- **Dataset-derived files** (everything under `artifacts/` and `report/figures/` except the S-BF files, including the manifest with original file names and image hashes, the splits and the per-image prediction records): derived from [Tiny-GenImage](https://huggingface.co/datasets/TheKernel01/Tiny-GenImage) (CC BY-NC-SA 4.0), itself built from GenImage (Zhu et al., NeurIPS 2023). They are released under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/); see [LICENSE-DATA](LICENSE-DATA).
-- **S-BF files** (`artifacts/supp_bfree/`, `artifacts/predictions/supp_bfree/`, `artifacts/tables/supp_bfree/`, `report/figures/supp_bfree/`, `DATA_CARD_SUPP_BFREE.md`): derived from the extended Synthbuster set of B-Free (F. Guillaro et al., "A Bias-Free Training Paradigm for More General AI-generated Image Detection", CVPR 2025), which builds on Synthbuster (Q. Bammey, IEEE Open Journal of Signal Processing, 2023) and on RAISE (D.-T. Dang-Nguyen, C. Pasquini, V. Conotter, G. Boato, "RAISE: A Raw Images Dataset for Digital Image Forensics", ACM MMSys 2015). For non-commercial research use under the terms of these sources; see [LICENSE-DATA](LICENSE-DATA).
+- **Dataset-derived files** (everything under `artifacts/` and `report/figures/` except the S-BF and S-BF-EQ files, including the manifest with original file names and image hashes, the splits and the per-image prediction records): derived from [Tiny-GenImage](https://huggingface.co/datasets/TheKernel01/Tiny-GenImage) (CC BY-NC-SA 4.0), itself built from GenImage (Zhu et al., NeurIPS 2023). They are released under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/); see [LICENSE-DATA](LICENSE-DATA).
+- **S-BF files** (`artifacts/supp_bfree/`, `artifacts/predictions/supp_bfree/`, `artifacts/tables/supp_bfree/`, `report/figures/supp_bfree/`, `DATA_CARD_SUPP_BFREE.md`, and the S-BF-EQ counterparts `artifacts/supp_bfree_eq/`, `artifacts/predictions/supp_bfree_eq/`, `artifacts/tables/supp_bfree_eq/`, `report/figures/supp_bfree_eq/`): derived from the extended Synthbuster set of B-Free (F. Guillaro et al., "A Bias-Free Training Paradigm for More General AI-generated Image Detection", CVPR 2025), which builds on Synthbuster (Q. Bammey, IEEE Open Journal of Signal Processing, 2023) and on RAISE (D.-T. Dang-Nguyen, C. Pasquini, V. Conotter, G. Boato, "RAISE: A Raw Images Dataset for Digital Image Forensics", ACM MMSys 2015). For non-commercial research use under the terms of these sources; see [LICENSE-DATA](LICENSE-DATA).
 - No dataset image is included. Attribution and pinned source details: [DATA_CARD.md](DATA_CARD.md) and [DATA_CARD_SUPP_BFREE.md](DATA_CARD_SUPP_BFREE.md).
 
 Citation metadata: [CITATION.cff](CITATION.cff). Please cite it as an unpublished research project.

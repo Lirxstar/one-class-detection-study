@@ -1,0 +1,50 @@
+# Post hoc analysis S-BF-EQ (PROTOCOL.md Section 8): equal total training size for B1 on S-BF.
+# Added after the S-BF results; reuses the S-BF data, partitions, features, cells, metrics and bootstrap.
+# Not part of the main-study config hash (config.CONFIG_FILES) nor of the S-BF hash; records carry
+# `eq_config_hash` = sha256(S-BF supp_config_hash + this file).
+name: supp_bfree_eq
+protocol_version: "S-BF-EQ 1.0"
+base_protocol: "S-BF 1.0"                   # data, colour rule, partitions, features, cells, metrics, bootstrap unchanged
+
+design: equal_total                         # B1 trains on as many images as O1 and O2 (600)
+analysis: all                               # S-BF primary analysis only (all ids, real images converted to sRGB)
+
+train_subsample:
+  pool: {final: R_train, pilot: P_fit_real} # source ids of the S-BF training partition (600; pilot 360)
+  unit: source_id                           # B1 receives the REAL and the SD3.5 image of every drawn id
+  fraction: 0.5                             # 300 ids -> 300 real + 300 SD3.5 = 600 images (pilot: 180 ids)
+  stratify: stratum                         # S-BF split strata (srgb, other); floor(n_h * fraction) per stratum,
+                                            # leftover ids to the largest fractional parts (ties: stratum name)
+  sampler: "default_rng(seed).choice(sorted ids of stratum, k_h, replace=False), strata in sorted order, one rng per seed"
+  seeds: [101, 102, 103, 104, 105]          # fixed before any S-BF-EQ fit or score
+
+methods:
+  refit: B1                                 # detectors.B1.fit unchanged: C grid {0.01, 0.1, 1, 10, 100}, grouped 5-fold CV
+                                            # (StratifiedGroupKFold, seed 42, groups = id_group) inside the 600 subsample rows
+  calibration: R_cal                        # calibrate.threshold on B1 scores of the 200 real calibration images (pilot: P_cal)
+  reused_from_sbf_final:                    # read from artifacts/predictions/supp_bfree/, never refitted or rescored
+    O1: 600 real train images               # 5-NN cosine distance
+    O2: 600 real train images               # Ledoit-Wolf Mahalanobis
+    B1_full: 600 real + 600 SD3.5 train images
+
+cells:                                      # S-BF cells
+  primary: {backbone: primary, condition: native}
+  secondary: [{backbone: primary, condition: resize}, {backbone: secondary, condition: native}]
+
+metrics:
+  primary:                                  # FLUX test images vs the 200 real test images
+    - auroc FLUX of B1-eq, per seed and mean over the 5 seeds
+    - O1 minus B1-eq and O2 minus B1-eq, AUROC FLUX, per seed and seed mean, paired bootstrap 95% intervals
+  secondary:
+    - B1-eq minus B1-full, AUROC FLUX (cost of halving the training ids)
+    - AUROC SD3.5 (seen) of B1-eq
+    - TPR at matched 5% real FPR and calibrated operating point (FLUX)
+    - between-seed spread of point estimates (SD with ddof 1, min, max)
+  reading_rule: "a difference is called a difference only if its 95% interval excludes 0"
+
+bootstrap:                                  # S-BF draws: identical resampled test ids, so all contrasts are paired
+  n: 2000
+  seed: 2026
+  unit: test_source_id_group
+  interval: percentile_95
+  seed_mean: "per draw, the mean over the 5 seeds of the B1-eq metric; interval of that mean"

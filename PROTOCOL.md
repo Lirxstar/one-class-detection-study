@@ -2,9 +2,9 @@
 
 **Study:** Real-only synthetic-image detection with frozen DINOv2 features  
 **Protocol version:** v0.6.6  
-**Supplementary experiment:** S-BF 1.0 (Section 7)  
+**Supplementary experiment:** S-BF 1.0 (Section 7), with the post hoc analysis S-BF-EQ 1.0 (Section 8)  
 **Primary condition:** D-ctrl  
-**Machine-readable settings:** [`configs/core.yaml`](configs/core.yaml), [`configs/conditions.yaml`](configs/conditions.yaml), [`configs/e2_postprocessing.yaml`](configs/e2_postprocessing.yaml), [`configs/e3_encoding.yaml`](configs/e3_encoding.yaml); S-BF: [`configs/supp_bfree.yaml`](configs/supp_bfree.yaml)
+**Machine-readable settings:** [`configs/core.yaml`](configs/core.yaml), [`configs/conditions.yaml`](configs/conditions.yaml), [`configs/e2_postprocessing.yaml`](configs/e2_postprocessing.yaml), [`configs/e3_encoding.yaml`](configs/e3_encoding.yaml); S-BF: [`configs/supp_bfree.yaml`](configs/supp_bfree.yaml); S-BF-EQ: [`configs/supp_bfree_eq.yaml`](configs/supp_bfree_eq.yaml)
 
 The core E1–E3 experiments were specified before validation scoring. D-native, E3C decomposition, and reference reseeding were conducted as post-hoc analyses. Exact experimental settings are provided in the YAML configuration files.
 
@@ -122,3 +122,17 @@ FLUX images of train and calibration ids and SD3.5 images of calibration ids are
 **Metrics and statistics.** AUROC; TPR at a matched 5% real FPR, with the threshold at the (m+1)-th largest real test score, m = floor(0.05 n), equal for all methods (an oracle operating point for comparison); TPR and real FPR at the calibrated threshold; matched-pair rate, the share of ids whose synthetic image scores above its own real image. 2,000 bootstrap draws (seed 2026) resample test id groups, with the real, FLUX and SD3.5 images of an id drawn together; all methods and cells share the draws, so differences are paired. A difference is called resolved only if its 95% interval excludes 0. The comparison with the main study is descriptive.
 
 **Claim limits.** The real photographs carry a resampling history and a 3:2 aspect ratio, while the synthetic images are native 1024 × 1024 output. The content match is caption-level, not pixel-level. The colour conversion touches real images only (the sensitivity analysis has none). SD3.5 and FLUX are related latent generators, and there is one unseen generator with 200 test pairs.
+
+## 8. Post hoc analysis S-BF-EQ: equal training size for B1
+
+Added after the S-BF results. In S-BF, B1 is fitted on 1,200 images and O1/O2 on 600; S-BF-EQ refits B1 on 600 images and compares it with O1 and O2 on FLUX. It reuses the S-BF test set, so it qualifies S-BF rather than replicating it. Design, seeds and reading rule were fixed and the drawn ids committed before any S-BF-EQ fit or score; a development pilot on train ids only came first, and the final run was executed once.
+
+**Training draws.** From the 600 S-BF train ids only, 300 ids are drawn without replacement for each of the seeds 101, 102, 103, 104 and 105, stratified by the S-BF split stratum: `floor(0.5 n_h)` per stratum, leftover ids to the largest fractional parts, which gives 215 sRGB-tagged and 85 other ids. One `numpy.random.default_rng(seed)` per seed; strata in sorted order; within a stratum `rng.choice` over the sorted ids. The unit is the source id; training, calibration and test are already separated by id group. The drawn ids are in `artifacts/supp_bfree_eq/subsamples.json`.
+
+**B1-eq.** For each seed, B1 as in Section 4 on the real and the SD3.5 image of the drawn ids (300 + 300 = 600 images, as many as O1 and O2 use), C by grouped 5-fold CV inside these rows (groups = id groups), threshold from the 200 `R_cal` images (k = 191). Calibration and test partitions, features and cells are those of Section 7; only the primary analysis (all ids) is repeated. O1, O2 and B1 on all 600 train ids (B1-full) are read from the S-BF records and not refitted.
+
+**Metrics and statistics.** Primary: FLUX AUROC of B1-eq per seed and its mean over seeds; paired differences O1 minus B1-eq and O2 minus B1-eq. Secondary: B1-eq minus B1-full, SD3.5 AUROC, TPR at matched 5% FPR and the calibrated operating point. Intervals use the S-BF bootstrap draws (2,000, seed 2026), so every method, seed and cell is compared on the same resampled ids. For the seed mean, each draw averages the five B1-eq values; this interval covers test-sample uncertainty for these five draws, and the spread over seeds is reported separately (SD, minimum, maximum). Fixed reading rule for the primary cell: if the interval of the seed-mean difference lies below 0, B1-eq is above the real-only score; if it contains 0, there is no resolved difference; if it lies above 0, the real-only score is above. Secondary cells are descriptive.
+
+**Code-path check.** In the pilot, B1 refitted by this code on the full pilot pool reproduces the S-BF pilot B1 scores bitwise when scored in the same batches (calibration rows, then test rows); a different batch composition changes scores at the 1e-15 level.
+
+**Claim limits.** Post hoc, on 200 already-scored test pairs. Equal size refers to training images, not to real images (B1-eq 300, O1 and O2 600) or distinct contents. Five draws describe the training-sample variation but do not estimate it precisely. All S-BF limits apply.

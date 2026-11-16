@@ -1,7 +1,7 @@
 Dataset-derived files
 
-The files under `artifacts/` and `report/figures/`, except the S-BF files listed
-below, are derived from the Tiny-GenImage dataset (Hugging Face:
+The files under `artifacts/` and `report/figures/`, except the S-BF and S-BF-EQ
+files listed below, are derived from the Tiny-GenImage dataset (Hugging Face:
 TheKernel01/Tiny-GenImage, revision 89c4fe9efd0ebc7ce5c7641ef57d578ccd639c69),
 which is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike
 4.0 International License and is itself built from GenImage (M. Zhu et al.,
@@ -19,7 +19,9 @@ Copyright (c) 2026 Ruixin Li. No image from the dataset is included.
 S-BF files
 
 The files under `artifacts/supp_bfree/`, `artifacts/predictions/supp_bfree/`,
-`artifacts/tables/supp_bfree/` and `report/figures/supp_bfree/`, and
+`artifacts/tables/supp_bfree/`, `report/figures/supp_bfree/`,
+`artifacts/supp_bfree_eq/`, `artifacts/predictions/supp_bfree_eq/`,
+`artifacts/tables/supp_bfree_eq/` and `report/figures/supp_bfree_eq/`, and
 `DATA_CARD_SUPP_BFREE.md`, are derived from the extended Synthbuster set
 released with B-Free (https://github.com/grip-unina/B-Free; F. Guillaro et al.,
 "A Bias-Free Training Paradigm for More General AI-generated Image Detection",
