@@ -1,6 +1,6 @@
 # Reproducibility
 
-This repository contains the Python experiment code, the protocol and configuration files, the frozen manifest and splits, nine SVG figures, selected CSV tables and the compressed final and post hoc prediction records. No dataset image bytes, pretrained model checkpoints, image views or feature arrays are included.
+This repository contains the Python experiment code, the protocol and configuration files, the frozen manifest and splits, the SVG figures, selected CSV tables and the compressed final and post hoc prediction records, for the main study and for the S-BF supplement (PROTOCOL.md Section 7). No dataset image bytes, pretrained model checkpoints, image views or feature arrays are included.
 
 ## Environment
 
@@ -11,7 +11,7 @@ python -m pip install -r requirements.lock
 python -m pytest -q
 ```
 
-Tests that need the local view or feature caches skip until those caches exist. On a fresh copy of this repository with the locked environment: 90 passed, 12 skipped.
+Tests that need the local view or feature caches, or the B-Free images, skip until those exist. On a fresh copy of this repository with the locked environment: 109 passed, 13 skipped.
 
 ## Analysis from saved predictions
 
@@ -22,7 +22,7 @@ python src/analysis.py
 python src/figures.py
 ```
 
-`analysis.py` writes all tables to `artifacts/tables/` (a selection of them is committed); `figures.py` writes the nine figures to `report/figures/` as SVG, plus PNG copies that `.gitignore` excludes. With the locked environment the committed tables and SVGs are reproduced byte for byte; other Matplotlib versions may change SVG bytes but not values.
+`analysis.py` writes all tables to `artifacts/tables/` (a selection of them is committed); `figures.py` writes the nine main-study figures to `report/figures/` as SVG, plus PNG copies that `.gitignore` excludes. With the locked environment the committed tables and SVGs are reproduced byte for byte; other Matplotlib versions may change SVG bytes but not values.
 
 ## Full rerun from raw data
 
@@ -70,12 +70,42 @@ The original reseeding run also compared its seed-42 path with the train-only pi
 
 To check a rerun, compare each new file in `artifacts/predictions/` with the same file in `../reference-records/predictions/`: identities, scores, thresholds and flags should match; `run_id` and `git_commit` differ by design.
 
+## Supplementary experiment S-BF
+
+### From saved predictions
+
+```bash
+python src/analysis.py
+python src/supp_bfree_analysis.py
+```
+
+`supp_bfree_analysis.py` reads `artifacts/predictions/supp_bfree/` and three main-study tables that `analysis.py` writes (`table1_d_ctrl.csv`, `table1_d_raw.csv`, `posthoc_native_ladder.csv`). It writes the S-BF tables to `artifacts/tables/supp_bfree/` (a selection is committed) and the two figures to `report/figures/supp_bfree/`.
+
+### Full rerun
+
+1. Download the extended Synthbuster set listed in the [B-Free repository](https://github.com/grip-unina/B-Free) (section "Dataset of new generators") so that the folders are `data/BFree/real_RAISE_1k/`, `data/BFree/sd3_flux/sd3_large/` and `data/BFree/sd3_flux/flux/`. The SHA256 of every expected file is in `artifacts/supp_bfree/audit/files.csv`.
+2. DINOv2 source and weights as in step 2 above.
+3. In a disposable working copy, move `artifacts/predictions/supp_bfree` aside; `supp_bfree_run.py` refuses to overwrite it.
+
+```bash
+python src/supp_bfree_audit.py --workers 4
+python src/supp_bfree_splits.py
+python src/supp_bfree_features.py --workers 4
+python src/supp_bfree_run.py
+python src/supp_bfree_analysis.py
+```
+
+The audit rewrites `artifacts/supp_bfree/audit/` and `DATA_CARD_SUPP_BFREE.md`; `supp_bfree_splits.py` stops if the audit gate failed and otherwise rewrites `manifest.csv` and `splits.json`. The feature script asserts that the sRGB conversion leaves the 743 sRGB-tagged real images unchanged, that a second extraction of 32 views is bitwise identical, and, when the main-study view and feature caches exist, that 32 cached D-ctrl features are reproduced bitwise. `python src/supp_bfree_run.py --pilot` repeats the train-only development run; its records are not distributed.
+
+A rerun should match the bundled records in identities, scores, thresholds, flags and selected C. `run_id`, `git_commit` and `supp_config_hash` identify the original run and differ; the published `configs/supp_bfree.yaml` differs from the original one only in comments.
+
 ## What has been verified
 
 - **Original runs.** Each final experiment (E1, E2, E3) and each post hoc run was executed once, after the protocol and splits were fixed and the test suite passed.
 - **Independent working copy of the project.** Reruns from cached features and from raw data reproduced the E1 to E3 predictions. The D-native and reseeding runs were each executed once and have not been rerun from features or raw data.
-- **This repository.** The test suite passes and `analysis.py` and `figures.py` reproduce the committed tables and figures from the saved predictions. No model fitting or inference has been rerun from this repository.
+- **This repository.** The test suite passes and `analysis.py` and `figures.py` reproduce the committed tables and figures from the saved predictions. No model fitting or inference of the main study has been rerun from this repository.
+- **S-BF.** From a copy of this repository with the B-Free data, the audit, the splits, feature extraction and `supp_bfree_run.py` reproduced the bundled S-BF records (identities, scores, thresholds, flags and selected C), and `supp_bfree_analysis.py` reproduced the committed S-BF tables and SVG figures byte for byte.
 
 ## Limits and licensing
 
-Intervals are paired percentile bootstrap confidence intervals over fixed test identities, conditional on fitted models. The reseeding study does not represent multiple independent datasets. Consult `DATA_CARD.md` and `PROTOCOL.md` for data eligibility, leakage controls and interpretation. Code is MIT licensed (`LICENSE`); the dataset-derived files under `artifacts/` and `report/figures/` follow the dataset's CC BY-NC-SA 4.0 license (`LICENSE-DATA`).
+Intervals are paired percentile bootstrap confidence intervals over fixed test identities, conditional on fitted models. The reseeding study does not represent multiple independent datasets. Consult `DATA_CARD.md` and `PROTOCOL.md` for data eligibility, leakage controls and interpretation. Code is MIT licensed (`LICENSE`); the dataset-derived files under `artifacts/` and `report/figures/` follow the Tiny-GenImage CC BY-NC-SA 4.0 license, and the S-BF files the B-Free and RAISE terms (`LICENSE-DATA`).

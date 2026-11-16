@@ -1,0 +1,353 @@
+{
+ "dataset": "B-Free extended Synthbuster (RAISE-1k real, SD3.5 Large, FLUX)",
+ "root": "data/BFree",
+ "dirs": {
+  "REAL": "real_RAISE_1k",
+  "SD35": "sd3_flux/sd3_large",
+  "FLUX": "sd3_flux/flux"
+ },
+ "ids_per_class": {
+  "REAL": 1000,
+  "SD35": 1000,
+  "FLUX": 1000
+ },
+ "ids_identical_across_classes": true,
+ "non_id_entries": {
+  "REAL": [
+   "RAISE_License.pdf",
+   "README.txt"
+  ],
+  "SD35": [],
+  "FLUX": [
+   ".ipynb_checkpoints"
+  ]
+ },
+ "per_class": {
+  "FLUX": {
+   "n": 1000,
+   "decode_ok": 1000,
+   "pil_mode": {
+    "RGB": 1000
+   },
+   "bit_depth": {
+    "8": 1000
+   },
+   "png_color_type": {
+    "2": 1000
+   },
+   "interlaced": 0,
+   "sizes": {
+    "1024x1024": 1000
+   },
+   "pixels": {
+    "n": 1000,
+    "min": 1048576.0,
+    "p50": 1048576.0,
+    "p99": 1048576.0,
+    "max": 1048576.0
+   },
+   "min_side": 1024,
+   "chunks": {
+    "IDAT+IEND+IHDR": 1000
+   },
+   "text_chunks": 0,
+   "exif": 0,
+   "icc": {
+    "none": 1000
+   },
+   "bytes_per_pixel": {
+    "n": 1000,
+    "min": 0.48486900329589844,
+    "p50": 1.636873722076416,
+    "p99": 2.484330472946167,
+    "max": 2.688900947570801
+   },
+   "grid_score": {
+    "n": 1000,
+    "min": 0.0022231066519258977,
+    "p50": 0.006404671075949893,
+    "p99": 0.03284061453000057,
+    "max": 0.0574379963678488
+   },
+   "lattice_aligned_minus_median": {
+    "n": 1000,
+    "min": -0.1489784044496155,
+    "p50": 0.0005538955093174133,
+    "p99": 0.020365028903484402,
+    "max": 0.054890652576174426
+   }
+  },
+  "REAL": {
+   "n": 1000,
+   "decode_ok": 1000,
+   "pil_mode": {
+    "RGB": 1000
+   },
+   "bit_depth": {
+    "8": 1000
+   },
+   "png_color_type": {
+    "2": 1000
+   },
+   "interlaced": 0,
+   "sizes": {
+    "1258x833": 571,
+    "1256x835": 183,
+    "833x1258": 157,
+    "835x1256": 88,
+    "834x1258": 1
+   },
+   "pixels": {
+    "n": 1000,
+    "min": 1047914.0,
+    "p50": 1047914.0,
+    "p99": 1048760.0,
+    "max": 1049172.0
+   },
+   "min_side": 833,
+   "chunks": {
+    "IDAT+IEND+IHDR+iCCP": 999,
+    "IDAT+IEND+IHDR": 1
+   },
+   "text_chunks": 0,
+   "exif": 0,
+   "icc": {
+    "Nikon sRGB 4.0.0.3002": 743,
+    "Nikon Adobe RGB 4.0.0.3001": 256,
+    "none": 1
+   },
+   "bytes_per_pixel": {
+    "n": 1000,
+    "min": 0.5212937321192388,
+    "p50": 1.5360737166966905,
+    "p99": 2.3755721557303366,
+    "max": 2.4871458917430247
+   },
+   "grid_score": {
+    "n": 1000,
+    "min": 0.002729322298139436,
+    "p50": 0.009585802189170142,
+    "p99": 0.02908621678185791,
+    "max": 0.0947065118780033
+   },
+   "lattice_aligned_minus_median": {
+    "n": 1000,
+    "min": -0.13616531990065509,
+    "p50": 4.824039666484481e-05,
+    "p99": 0.014136852386944388,
+    "max": 0.03261624012739128
+   },
+   "icc_to_srgb::Nikon Adobe RGB 4.0.0.3001": {
+    "n": 256,
+    "identical": 0,
+    "max_change": {
+     "n": 256,
+     "min": 11.0,
+     "p50": 51.5,
+     "p99": 144.0,
+     "max": 144.0
+    },
+    "mean_change": {
+     "n": 256,
+     "min": 0.816730233799916,
+     "p50": 4.313699988557916,
+     "p99": 13.436794230011301,
+     "max": 19.475895660907483
+    },
+    "share_gt1": {
+     "n": 256,
+     "min": 0.05162858995385026,
+     "p50": 0.6181005822749406,
+     "p99": 0.8561633262138143,
+     "max": 0.907648715308237
+    }
+   },
+   "icc_to_srgb::Nikon sRGB 4.0.0.3002": {
+    "n": 743,
+    "identical": 743,
+    "max_change": {
+     "n": 743,
+     "min": 0.0,
+     "p50": 0.0,
+     "p99": 0.0,
+     "max": 0.0
+    },
+    "mean_change": {
+     "n": 743,
+     "min": 0.0,
+     "p50": 0.0,
+     "p99": 0.0,
+     "max": 0.0
+    },
+    "share_gt1": {
+     "n": 743,
+     "min": 0.0,
+     "p50": 0.0,
+     "p99": 0.0,
+     "max": 0.0
+    }
+   }
+  },
+  "SD35": {
+   "n": 1000,
+   "decode_ok": 1000,
+   "pil_mode": {
+    "RGB": 1000
+   },
+   "bit_depth": {
+    "8": 1000
+   },
+   "png_color_type": {
+    "2": 1000
+   },
+   "interlaced": 0,
+   "sizes": {
+    "1024x1024": 1000
+   },
+   "pixels": {
+    "n": 1000,
+    "min": 1048576.0,
+    "p50": 1048576.0,
+    "p99": 1048576.0,
+    "max": 1048576.0
+   },
+   "min_side": 1024,
+   "chunks": {
+    "IDAT+IEND+IHDR": 1000
+   },
+   "text_chunks": 0,
+   "exif": 0,
+   "icc": {
+    "none": 1000
+   },
+   "bytes_per_pixel": {
+    "n": 1000,
+    "min": 0.5996417999267578,
+    "p50": 1.6300444602966309,
+    "p99": 2.3177938652038574,
+    "max": 2.458277702331543
+   },
+   "grid_score": {
+    "n": 1000,
+    "min": 0.0025765030669558098,
+    "p50": 0.008318870463312436,
+    "p99": 0.02110034106001518,
+    "max": 0.0341058714510985
+   },
+   "lattice_aligned_minus_median": {
+    "n": 1000,
+    "min": -0.016309381370676,
+    "p50": 4.567715868900035e-05,
+    "p99": 0.012586102223620037,
+    "max": 0.022640052681660805
+   }
+  }
+ },
+ "littlecms_version": "2.19",
+ "jpeg_lattice": {
+  "flag_rule": "lattice_aligned - lattice_median > 0.1",
+  "stored": {
+   "FLUX": {
+    "aligned_minus_median": {
+     "n": 1000,
+     "min": -0.1489784044496155,
+     "p50": 0.0005538955093174133,
+     "p99": 0.020365028903484402,
+     "max": 0.054890652576174426
+    },
+    "flagged": 0,
+    "aligned_is_argmax_share": 0.031,
+    "grid_score_max_over_offsets": {
+     "n": 1000,
+     "min": 0.0022231066519258977,
+     "p50": 0.006404671075949893,
+     "p99": 0.03284061453000057,
+     "max": 0.0574379963678488
+    }
+   },
+   "REAL": {
+    "aligned_minus_median": {
+     "n": 1000,
+     "min": -0.13616531990065509,
+     "p50": 4.824039666484481e-05,
+     "p99": 0.014136852386944388,
+     "max": 0.03261624012739128
+    },
+    "flagged": 0,
+    "aligned_is_argmax_share": 0.02,
+    "grid_score_max_over_offsets": {
+     "n": 1000,
+     "min": 0.002729322298139436,
+     "p50": 0.009585802189170142,
+     "p99": 0.02908621678185791,
+     "max": 0.0947065118780033
+    }
+   },
+   "SD35": {
+    "aligned_minus_median": {
+     "n": 1000,
+     "min": -0.016309381370676,
+     "p50": 4.567715868900035e-05,
+     "p99": 0.012586102223620037,
+     "max": 0.022640052681660805
+    },
+    "flagged": 0,
+    "aligned_is_argmax_share": 0.011,
+    "grid_score_max_over_offsets": {
+     "n": 1000,
+     "min": 0.0025765030669558098,
+     "p50": 0.008318870463312436,
+     "p99": 0.02110034106001518,
+     "max": 0.0341058714510985
+    }
+   }
+  },
+  "controls": {
+   "Q90": {
+    "aligned_minus_median": {
+     "n": 150,
+     "min": -0.11808114064582143,
+     "p50": 0.557549043397074,
+     "p99": 0.7556907104610724,
+     "max": 0.7649144977124014
+    },
+    "detected": 0.9266666666666666
+   },
+   "Q96": {
+    "aligned_minus_median": {
+     "n": 150,
+     "min": -0.1098248262684306,
+     "p50": 0.5710029193523221,
+     "p99": 0.6409913726033469,
+     "max": 0.6415379657084624
+    },
+    "detected": 0.9466666666666667
+   }
+  },
+  "control_detection_rate": 0.9366666666666666,
+  "chance_argmax_share": 0.015625,
+  "aligned_is_argmax_share_controls": 0.9533333333333334,
+  "no_jpeg_history": true
+ },
+ "eligibility": {
+  "ids_total": 1000,
+  "ids_failing_file_rules": 0,
+  "ids_failing_icc_rule": 0,
+  "ids_eligible": 1000,
+  "ids_eligible_srgb_tagged": 743
+ },
+ "sensitivity_conversion_identity": true,
+ "metadata_separability": {
+  "size_sets_disjoint": true,
+  "iccp_only_in_real": true
+ },
+ "gate": {
+  "ids_identical": true,
+  "all_png_8bit_rgb_decodable": true,
+  "no_jpeg_lattice_in_any_class": true,
+  "enough_eligible_ids": true,
+  "min_eligible_ids_required": 600,
+  "srgb_conversion_identity_for_sensitivity_ids": true,
+  "passed": true
+ }
+}

@@ -2,8 +2,9 @@
 
 **Study:** Real-only synthetic-image detection with frozen DINOv2 features  
 **Protocol version:** v0.6.6  
+**Supplementary experiment:** S-BF 1.0 (Section 7)  
 **Primary condition:** D-ctrl  
-**Machine-readable settings:** [`configs/core.yaml`](configs/core.yaml), [`configs/conditions.yaml`](configs/conditions.yaml), [`configs/e2_postprocessing.yaml`](configs/e2_postprocessing.yaml), [`configs/e3_encoding.yaml`](configs/e3_encoding.yaml)
+**Machine-readable settings:** [`configs/core.yaml`](configs/core.yaml), [`configs/conditions.yaml`](configs/conditions.yaml), [`configs/e2_postprocessing.yaml`](configs/e2_postprocessing.yaml), [`configs/e3_encoding.yaml`](configs/e3_encoding.yaml); S-BF: [`configs/supp_bfree.yaml`](configs/supp_bfree.yaml)
 
 The core E1–E3 experiments were specified before validation scoring. D-native, E3C decomposition, and reference reseeding were conducted as post-hoc analyses. Exact experimental settings are provided in the YAML configuration files.
 
@@ -92,3 +93,32 @@ Exploratory checks use B1 with C=1, O1 with k=1/10, and M0 L2, L1/L2 and dominan
 - **Leakage control:** B1 uses only real/SD15 **training** labels; O1/O2/M0 receive no synthetic labels. No validation labels or scores select hyperparameters, reference sets, score orientation or thresholds. The pre-registered E1–E3 design preceded validation scoring; subsequent additions and corrections are labeled explicitly.
 - **Saved evidence:** prediction records retain run/config/dataset/encoder identifiers, image/partition IDs, generator, method, score, threshold and predicted label. Tables and plots are derived from stored predictions. Config SHA256 is computed from the four YAML files in sorted-path order.
 - **Claim limits:** Results concern this Tiny-GenImage derivative, these generators and frozen *global CLS-token* features. SD15 training is not a replication of SD14-based GenImage settings. Dataset storage shortcuts, content/field-of-view changes, and incomplete control of compression history limit interpretation. No causal artifact localization, universal anomaly-detection ranking, or cross-dataset/deployment guarantee is claimed.
+
+## 7. Supplementary experiment S-BF: content-matched, lossless data
+
+Added after the main study to test whether its conclusions depend on the JPEG/PNG storage split of the Tiny-GenImage derivative. The protocol, partitions and analysis were fixed before any DINOv2 feature of these data was computed, and the final run was executed once.
+
+**Data.** The extended Synthbuster set released with [B-Free](https://github.com/grip-unina/B-Free) (Guillaro et al., CVPR 2025): 1,000 RAISE-1k photographs, resized by the providers to about 1024² pixels at the camera aspect ratio (mostly 1258 × 833 or 1256 × 835, in either orientation), and for each photograph one FLUX and one Stable Diffusion 3.5 image (folder `sd3_large`, 1024 × 1024) generated from its caption. The shared file stem is the **source id**. All files are 8-bit RGB PNG without text or EXIF chunks.
+
+**Audit and gate.** Per file: SHA256, PNG header and chunks, ICC profile, decoded shape, exact RGB hash and dHash, and an 8 × 8 DCT quantization-lattice statistic `L` of luma at all 64 grid offsets (central 256 × 256 region, steps 2 to 10). An image counts as JPEG-encoded at its stored size if `L` on the aligned grid exceeds the median over offsets by more than 0.1. This aligned-grid criterion replaced a first one (maximum over offsets) after the byte audit and before feature extraction, because the search over offsets turned noise into outliers. The gate requires identical id sets, decodable 8-bit RGB PNG files, no flagged stored image while at least 90% of Q96/Q90 re-encoded controls are flagged, and at least 600 eligible ids. **Outcome:** passed; 0 of 3,000 stored images flagged; controls flagged 94.7% (Q96) and 92.7% (Q90); all 1,000 ids eligible.
+
+**Colour.** Real images carry Nikon sRGB (743), Nikon Adobe RGB (256) or no (1) ICC profile; synthetic images carry none. Each tagged real image is converted to standard sRGB with `ImageCms.profileToProfile` (relative colorimetric, flags 0); the untagged image is treated as sRGB. Without the conversion, Adobe RGB values read as sRGB are desaturated, a difference present only in real images. The **sensitivity analysis** repeats fitting, calibration and testing on the 743 sRGB-tagged ids, for which the conversion is checked to be the identity bitwise.
+
+**Partitions.** Ids are linked when any of their images share an exact RGB hash or a dHash within Hamming distance 4; linked ids form one group (952 groups; the largest, 35 ids chained through low-texture images, lies in train). Within two strata (groups whose real images are all sRGB-tagged; other groups), groups sorted by smallest id are permuted with a fresh `default_rng(42)` and cut 60/20/20.
+
+| Partition       | Content                    | Ids (all / sRGB-tagged) | Purpose                                      |
+| --------------- | -------------------------- | -----------------------:| -------------------------------------------- |
+| `R_train`       | Real, train ids            | 600 / 457               | O1/O2 references, B1 negatives               |
+| `F_seen_train`  | SD3.5, train ids           | 600 / 457               | B1 positives only                            |
+| `R_cal`         | Real, calibration ids      | 200 / 143               | Thresholds (k = 191; 137 for sRGB-tagged)    |
+| `R_test`        | Real, test ids             | 200 / 143               | Real FPR and AUROC negatives                 |
+| `F_unseen_test` | FLUX, test ids             | 200 / 143               | Primary positives, never used before testing |
+| `F_seen_test`   | SD3.5, test ids            | 200 / 143               | Seen-generator positives                     |
+
+FLUX images of train and calibration ids and SD3.5 images of calibration ids are not used. A development pilot used train ids only, with SD3.5 as positives and no FLUX image.
+
+**Views, encoder and methods.** Primary cell: ViT-S/14 on the 224 native crop (the D-native view; no harmonization because both classes are lossless). Secondary cells: resize to 256 then centre crop (the D-raw view), and ViT-B/14 on the native crop. Encoder, B1, O1, O2, M0 and the calibration rule are those of Sections 3 and 4; B1's cross-validation groups are the id groups, so a real image and its SD3.5 counterpart always share a fold.
+
+**Metrics and statistics.** AUROC; TPR at a matched 5% real FPR, with the threshold at the (m+1)-th largest real test score, m = floor(0.05 n), equal for all methods (an oracle operating point for comparison); TPR and real FPR at the calibrated threshold; matched-pair rate, the share of ids whose synthetic image scores above its own real image. 2,000 bootstrap draws (seed 2026) resample test id groups, with the real, FLUX and SD3.5 images of an id drawn together; all methods and cells share the draws, so differences are paired. A difference is called resolved only if its 95% interval excludes 0. The comparison with the main study is descriptive.
+
+**Claim limits.** The real photographs carry a resampling history and a 3:2 aspect ratio, while the synthetic images are native 1024 × 1024 output. The content match is caption-level, not pixel-level. The colour conversion touches real images only (the sensitivity analysis has none). SD3.5 and FLUX are related latent generators, and there is one unseen generator with 200 test pairs.

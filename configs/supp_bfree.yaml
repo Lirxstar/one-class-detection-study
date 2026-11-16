@@ -1,0 +1,80 @@
+# Supplementary experiment S-BF (PROTOCOL.md Section 7): B-Free extended Synthbuster.
+# Not part of the four-file config hash of the main study (config.CONFIG_FILES); records carry
+# `supp_config_hash` = sha256(core config hash + this file).
+name: supp_bfree
+protocol_version: "S-BF 1.0"
+
+data:
+  name: B-Free extended Synthbuster (RAISE-1k real, SD3.5 Large, FLUX)
+  root: data/BFree
+  dirs: {REAL: real_RAISE_1k, SD35: sd3_flux/sd3_large, FLUX: sd3_flux/flux}
+  id_pattern: "^r[0-9a-f]{8}t\\.png$"     # source id = file stem; the same stem in all three folders
+  real: REAL
+  seen_generator: SD35                      # B1 training label 1; also a secondary seen-generator test
+  unseen_generator: FLUX                    # never used for fitting, selection or calibration
+  revision: none                            # local copy without a revision id; per-file sha256 in artifacts/supp_bfree/audit/files.csv
+
+eligibility:                                # applied per source id: an id is eligible only if all three files pass
+  container: PNG
+  bit_depth: 8
+  png_color_type: 2                         # truecolour RGB, no alpha
+  decoded_mode: RGB
+  min_side: 224
+  real_icc_allowed: ["Nikon sRGB 4.0.0.3002", "Nikon Adobe RGB 4.0.0.3001", null]   # null = untagged
+  synthetic_icc: none
+  jpeg_history: none                        # audit gate: no 8x8 DCT quantization lattice at any grid offset
+
+colour:                                     # fixed before feature extraction
+  primary:                                  # all 1,000 source ids
+    real_with_icc: imagecms_to_srgb         # ImageCms.profileToProfile(embedded profile -> ImageCms.createProfile("sRGB"))
+    rendering_intent: relative_colorimetric # matrix/TRC profiles: perceptual and relative colorimetric coincide
+    flags: 0                                # LittleCMS defaults, no black point compensation
+    real_untagged: assumed_srgb_unchanged
+    synthetic: unchanged                    # no ICC chunk; sRGB by convention
+  sensitivity:                              # whole pipeline restricted to sRGB-tagged sources
+    real_icc_description: "Nikon sRGB 4.0.0.3002"
+    assert_conversion_is_identity: true     # converted == stored, bitwise, for every id in the subset
+
+jpeg_lattice:                               # audit statistic (src/supp_bfree_audit.py)
+  luma: [0.299, 0.587, 0.114]
+  region: 256                               # central region, 8x8 blocks at each of the 64 grid offsets
+  q_range: [2, 10]
+  min_coefficients: 50
+  positive_control: {per_class: 50, quality: [96, 90], subsampling: "4:4:4"}
+  # A JPEG encoded at the stored resolution leaves its lattice on the aligned grid (0, 0).
+  flag: {statistic: aligned_minus_median, threshold: 0.1}          # per image; flagged images make their id ineligible
+  gate: {max_flagged_stored: 0, min_control_detection: 0.9, max_aligned_argmax_share_stored: 0.05}
+
+duplicates: {exact: rgb_sha1, near: {hash: dhash64, max_hamming: 4}, linking: source_id}
+
+splits:
+  unit: source_id_group                     # ids linked by an exact or near duplicate stay together
+  strata: [srgb_tagged, other]              # each stratum split in the same proportions, so the sensitivity subset keeps them
+  seed: 42
+  proportions: {R_train: 0.6, R_cal: 0.2, R_test: 0.2}   # 600 / 200 / 200 of 1,000 ids
+  pilot: {fit: 0.6, cal: 0.2, test: 0.2}   # development, inside R_train ids only
+
+conditions:
+  native: {resize: none, crop: "conditions.native_view (224, offsets floor to multiple 8)"}
+  resize: {resize: "conditions.resize_short_256 (bicubic)", crop: "224 center"}
+cells:
+  primary: {backbone: primary, condition: native}
+  secondary: [{backbone: primary, condition: resize}, {backbone: secondary, condition: native}]
+analyses:
+  primary: all_ids                          # colour-converted real images
+  sensitivity: srgb_tagged_ids              # refit, recalibrate and test on the sRGB-tagged ids of each partition
+
+methods: core                               # B1, O1, O2, M0 exactly as configs/core.yaml; M0-x not used
+report_methods: [B1, O1, O2, M0]
+
+metrics:
+  auroc: mann_whitney_ties_half
+  matched_fpr: 0.05                         # TPR at the largest test threshold with real test FPR <= 5% (oracle, all methods equal FPR)
+  calibrated: core                          # tau from R_cal (k = ceil(0.95 (n + 1))), flag iff score > tau
+  matched_pair: P(s(fake_i) > s(real_i)) over test source ids, ties 1/2
+bootstrap:
+  n: 2000
+  seed: 2026
+  unit: test_source_id_group                # real, FLUX and SD35 of a drawn id move together; one draw set for every cell
+  interval: percentile_95
+

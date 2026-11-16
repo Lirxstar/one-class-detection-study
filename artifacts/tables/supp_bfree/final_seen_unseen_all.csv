@@ -1,0 +1,13 @@
+Cell,Method,AUROC SD3.5 minus FLUX
+ViT-S/14 native (primary),B1,"+0.252 [+0.208, +0.297] *"
+ViT-S/14 native (primary),O1,"+0.023 [-0.010, +0.055]"
+ViT-S/14 native (primary),O2,"+0.005 [-0.028, +0.037]"
+ViT-S/14 native (primary),M0,"+0.069 [+0.017, +0.113] *"
+ViT-S/14 resize,B1,"+0.097 [+0.072, +0.122] *"
+ViT-S/14 resize,O1,"+0.002 [-0.024, +0.027]"
+ViT-S/14 resize,O2,"-0.016 [-0.041, +0.008]"
+ViT-S/14 resize,M0,"-0.020 [-0.059, +0.018]"
+ViT-B/14 native,B1,"+0.251 [+0.206, +0.295] *"
+ViT-B/14 native,O1,"+0.013 [-0.019, +0.044]"
+ViT-B/14 native,O2,"-0.003 [-0.033, +0.026]"
+ViT-B/14 native,M0,"+0.091 [+0.047, +0.136] *"

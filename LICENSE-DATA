@@ -1,11 +1,12 @@
 Dataset-derived files
 
-The files under `artifacts/` and `report/figures/` are derived from the
-Tiny-GenImage dataset (Hugging Face: TheKernel01/Tiny-GenImage, revision
-89c4fe9efd0ebc7ce5c7641ef57d578ccd639c69), which is licensed under the Creative
-Commons Attribution-NonCommercial-ShareAlike 4.0 International License and is
-itself built from GenImage (M. Zhu et al., "GenImage: A Million-Scale Benchmark
-for Detecting AI-Generated Image", NeurIPS 2023).
+The files under `artifacts/` and `report/figures/`, except the S-BF files listed
+below, are derived from the Tiny-GenImage dataset (Hugging Face:
+TheKernel01/Tiny-GenImage, revision 89c4fe9efd0ebc7ce5c7641ef57d578ccd639c69),
+which is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike
+4.0 International License and is itself built from GenImage (M. Zhu et al.,
+"GenImage: A Million-Scale Benchmark for Detecting AI-Generated Image",
+NeurIPS 2023).
 
 These derived files (image identities, file names, image hashes, partitions,
 per-image scores and predictions, summary tables and figures) are released
@@ -13,6 +14,49 @@ under the same license, CC BY-NC-SA 4.0:
 https://creativecommons.org/licenses/by-nc-sa/4.0/
 
 Copyright (c) 2026 Ruixin Li. No image from the dataset is included.
+
+
+S-BF files
+
+The files under `artifacts/supp_bfree/`, `artifacts/predictions/supp_bfree/`,
+`artifacts/tables/supp_bfree/` and `report/figures/supp_bfree/`, and
+`DATA_CARD_SUPP_BFREE.md`, are derived from the extended Synthbuster set
+released with B-Free (https://github.com/grip-unina/B-Free; F. Guillaro et al.,
+"A Bias-Free Training Paradigm for More General AI-generated Image Detection",
+CVPR 2025). That set contains real photographs from RAISE and synthetic images
+generated from captions of those photographs. No image from it is included.
+
+These derived files (source ids, file hashes, partitions, per-image scores and
+predictions, summary tables and figures) may be used for scientific,
+non-commercial purposes only, under the terms of both sources:
+
+- B-Free: Copyright (c) 2025 Image Processing Research Group of University
+  Federico II of Naples ('GRIP-UNINA'). Use for informational and nonprofit
+  purposes only; see LICENSE.txt in the B-Free repository.
+
+- RAISE: Copyright (c) 2014 MMLAB. Original website:
+  http://mmlab.science.unitn.it/RAISE/
+  Reference: D.-T. Dang-Nguyen, C. Pasquini, V. Conotter, G. Boato, "RAISE:
+  A Raw Images Dataset for Digital Image Forensics", ACM MMSys 2015,
+  pp. 219-224.
+  RAISE license, as distributed with the data:
+
+    All data provided in the 'RAISE' are made freely available for scientific,
+    non-commercial purposes such as academic research, teaching, or personal
+    experimentation. Permission is granted to use and copy the provided data
+    given that you agree to the following coniditions:
+    1. The provided data comes "AS IS", without express or implied warranty.
+    2. A reference to our paper <To be published> is included in any published
+    work using the provided data either as a whole or in parts.
+    3. You may not use or distribute the data or any derivative work for
+    commercial purposes as, for example, licensing or selling the data, or
+    using the data with a purpose to procure a commercial gain without written
+    permission.
+    4. All copies or derivatives of the provided data must retain the above
+    copyright notice, the license including all conditions and a link to the
+    original website http://mmlab.science.unitn.it/RAISE/.
+    5. All rights not expressly granted to you are reserved by the authors.
+
 
 The source code in `src/`, `tests/` and `configs/` is licensed separately under
 the MIT License (see LICENSE).

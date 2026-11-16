@@ -1,0 +1,7 @@
+Analysis,Cell,n fit real,n cal,n real test,B1 C,O2 shrinkage,FLUX own real top-1,FLUX own real median rank,SD35 own real top-1,SD35 own real median rank
+all,ViT-S/14 native (primary),600,200,200,10.0,0.188,36.5%,3 of 200,36.0%,3 of 200
+srgb,ViT-S/14 native (primary),457,143,143,10.0,0.221,39.2%,3 of 143,37.1%,3 of 143
+all,ViT-S/14 resize,600,200,200,10.0,0.168,58.0%,1 of 200,58.5%,1 of 200
+srgb,ViT-S/14 resize,457,143,143,10.0,0.197,57.3%,1 of 143,60.1%,1 of 143
+all,ViT-B/14 native,600,200,200,10.0,0.248,36.5%,3 of 200,45.0%,2 of 200
+srgb,ViT-B/14 native,457,143,143,10.0,0.289,40.6%,2 of 143,44.8%,2 of 143
